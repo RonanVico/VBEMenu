@@ -26,34 +26,34 @@ Public Enum LineSplits
 End Enum
  
 Public Type ProcInfo
-    ProcName As String
-    procKind As VBIDE.vbext_ProcKind
-    ProcStartLine As Long
-    ProcBodyLine As Long
-    ProcCountLines As Long
-    ProcScope As ProcScope
-    ProcDeclaration As String
+    ProcName                As String
+    procKind                As VBIDE.vbext_ProcKind
+    ProcStartLine           As Long
+    ProcBodyLine            As Long
+    ProcCountLines          As Long
+    ProcScope               As ProcScope
+    ProcDeclaration         As String
 End Type
  
 
  
-Private pInfo As ProcInfo
+Private pInfo           As ProcInfo
        
        
         
 '-------- PARAMETROS
 '-------- ABAIXO ESTÃO OS PARAMETROS UTILIZADOS
-Private Const PARAM_PROGRAMADOR As String = "RONAN VICO"
-Private Const PARAM_EMPRESA As String = "Tecnun Tecnologia em Informática"
-Private Const PARAM_PROGRAMADOR_MAIL As String = "RONANVICO@hotmail.com"
-Private Const PARAM_CHAR_IDENTAÇÃO As String = vbTab '"  "
-Private Const PARAM_ERROR_HANDLER_NAME As String = "TratarErro"
-Private Const PARAM_TABULACAO_VARIAVEIS As Long = 20
+Private Const PARAM_PROGRAMADOR              As String = "RONAN VICO"
+Private Const PARAM_EMPRESA                  As String = "Tecnun Tecnologia em Informática"
+Private Const PARAM_PROGRAMADOR_MAIL         As String = "RONANVICO@hotmail.com"
+Private Const PARAM_CHAR_IDENTAÇÃO           As String = vbTab '"  "
+Private Const PARAM_ERROR_HANDLER_NAME       As String = "TratarErro"
+Private Const PARAM_TABULACAO_VARIAVEIS      As Long = 20
  
  
-Private Const QUEBRA_DE_LINHA As String = "_VBNEWLINE!"
-Private Const tagVarInit                  As String = "[V@_"
-Private Const tagVarEnd                 As String = "@]"
+Private Const QUEBRA_DE_LINHA               As String = "_VBNEWLINE!"
+Private Const tagVarInit                    As String = "[V@_"
+Private Const tagVarEnd                     As String = "@]"
  
 Private Property Get PARAM_HEADER_DEFAULT() As String
 pInfo = ProcedureInfo(ActiveProcedure, Application.VBE.ActiveCodePane.CodeModule, pInfo.procKind)
@@ -222,10 +222,10 @@ End Sub
 '---------------------------------------------------------------------------------------
  
 Public Function IsLinhaMatch(ByVal linha As String, ParamArray Padroes() As Variant) As Boolean
-    Dim resultado As Boolean
-    Dim Contador As Byte
-    Dim regExp As Object
-On Error GoTo TratarErro
+ Dim resultado           As Boolean
+ Dim Contador            As Byte
+ Dim regExp              As Object
+ On Error GoTo TratarErro
                                           'New VBScript_RegExp_55.RegExp
     If regExp Is Nothing Then Set regExp = VBA.CreateObject("VBScript.RegExp")
     With regExp
@@ -241,10 +241,12 @@ On Error GoTo TratarErro
         Next Contador
     End With
     IsLinhaMatch = resultado
-Exit Function
+ Exit Function
 TratarErro:
     'Call TFW_Excecoes.tratarerro(VBA.Err.Description, VBA.Err.Number, "TFW_AuxRegex.IsLinhaMatch()", Erl)
-End Function
+ End Function
+ 
+
  
  
  
@@ -319,7 +321,7 @@ Public Sub IdentaVariaveis()
                     DimLine = DimLines(contDimLines)
                     'Colocando identação das variaveis
                     If VBA.InStr(DimLine, " As ") = 0 Then
-                        DimLine = DimLine & VBA.Strings.Space$(PARAM_TABULACAO_VARIAVEIS + 1 - (VBA.Len(DimLine) - 4)) & "As Variant"
+                        DimLine = DimLine & VBA.Strings.Space$(PARAM_TABULACAO_VARIAVEIS - (VBA.Len(DimLine) - 4)) & "As Variant"
                     ElseIf contDimLines = 0 Then
                         DimLine = VBA.Left(DimLine, VBA.InStr(DimLine, " As ") - 1) & VBA.Strings.Space$(PARAM_TABULACAO_VARIAVEIS - (VBA.InStr(DimLine, " As ") - 5)) & VBA.Mid(DimLine, VBA.InStr(DimLine, " As ") + 1)
                     Else
@@ -380,16 +382,16 @@ Public Function PegarProcedureSemQuebraDeLinha(ProcedureName As String) As Strin
                Exemplo este comentario , a linha de baixo esta comentada de vido a esse Underline localizado /\ aqui _
                Logo , Iremos transformar tudo em "1 linha" para conseguirmos rodar funções de formatação de texto _
                e posteriormente plotar de volta as qebras de llinhas no seus devidos lugares !
-               
-    
-    Dim Proc            As ProcInfo
-    Dim textAntComment  As String
-    Dim textComment     As String
-    Dim line            As String
-    Dim texto           As String
-    Dim i               As Long
-    
-    
+ 
+ 
+ Dim Proc                As ProcInfo
+ Dim textAntComment      As String
+ Dim textComment         As String
+ Dim line                As String
+ Dim texto               As String
+ Dim i                   As Long
+ 
+ 
     Proc = ProcedureInfo(ProcedureName, Application.VBE.ActiveCodePane.CodeModule, pInfo.procKind)
     With Proc
         i = .ProcBodyLine
@@ -407,7 +409,9 @@ Public Function PegarProcedureSemQuebraDeLinha(ProcedureName As String) As Strin
         'Debug.Print Application.VBE.ActiveCodePane.CodeModule.Lines(.ProcBodyLine + 1, .ProcCountLines - 1)
     End With
     PegarProcedureSemQuebraDeLinha = texto
-End Function
+ End Function
+ 
+
  
  
 Public Function formataTexto(ByVal TextoOriginal As String, Optional ByRef MyArrVar) As String

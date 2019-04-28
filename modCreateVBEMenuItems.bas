@@ -17,54 +17,54 @@ Private Const C_TAG = "MY_VBE_TAG"
 Private Const C_TECNUN_BAR As String = "TECNUN"
 
 Sub InitVBRVTools()
-
-Dim Ctrl As Office.CommandBarControl
-
-
-'''''''''''''''''''''''''''''''''''''''''''''''''
-' Delete any existing controls with our Tag.
-'''''''''''''''''''''''''''''''''''''''''''''''''
-Set Ctrl = Application.VBE.CommandBars.FindControl(tag:=C_TAG)
-
-Do Until Ctrl Is Nothing
-    Ctrl.Delete
+    
+    Dim Ctrl As Office.CommandBarControl
+    
+    
+    '''''''''''''''''''''''''''''''''''''''''''''''''
+    ' Delete any existing controls with our Tag.
+    '''''''''''''''''''''''''''''''''''''''''''''''''
     Set Ctrl = Application.VBE.CommandBars.FindControl(tag:=C_TAG)
-Loop
-
-'''''''''''''''''''''''''''''''''''''''''''''''''
-' Delete any existing event handlers.
-'''''''''''''''''''''''''''''''''''''''''''''''''
-Do Until EventHandlers.Count = 0
-    EventHandlers.Remove 1
-Loop
-
-'''''''''''''''''''''''''''''''''''''''''''''''''
-' add the first control to the Tools menu.
-'''''''''''''''''''''''''''''''''''''''''''''''''
-On Error Resume Next
-Set cmbar = Application.VBE.CommandBars("Barra de menus")
-If cmbar Is Nothing Then
-    Set cmbar = Application.VBE.CommandBars(1)
-End If
-On Error GoTo 0
-
-Set cbBarTOOL = cmbar.FindControl(tag:=C_TECNUN_BAR)
-If cbBarTOOL Is Nothing Then
-    With cmbar.Controls.Add(10, , , cmbar.Controls.Count + 1, False)
-        .tag = "TECNUN"
-        .CAption = "&TECNUN_RV_TOOLS"
-        .BeginGroup = True
-        .Visible = True
-    End With
-End If
-
-Set cbBarTOOL = cmbar.FindControl(tag:=C_TECNUN_BAR)
-
-Call AddMenuButton("Inserir &Cabeçalho", True, "inserirCabeçalhoNaProcedure", 12)
-Call AddMenuButton("Inserir &Error Treatment", False, "inserirTratamentoDeErro", 464)
-Call AddMenuButton("Identar &Variaveis", True, "IdentaVariaveis", 123)
-Call AddMenuButton("Desbloquear All VBE's", True, "Hook", 650)
-Call AddMenuButton("About Creator", True, "aboutme", 111)
+    
+    Do Until Ctrl Is Nothing
+        Ctrl.Delete
+        Set Ctrl = Application.VBE.CommandBars.FindControl(tag:=C_TAG)
+    Loop
+    
+    '''''''''''''''''''''''''''''''''''''''''''''''''
+    ' Delete any existing event handlers.
+    '''''''''''''''''''''''''''''''''''''''''''''''''
+    Do Until EventHandlers.Count = 0
+        EventHandlers.Remove 1
+    Loop
+    
+    '''''''''''''''''''''''''''''''''''''''''''''''''
+    ' add the first control to the Tools menu.
+    '''''''''''''''''''''''''''''''''''''''''''''''''
+    On Error Resume Next
+    Set cmbar = Application.VBE.CommandBars("Barra de menus")
+    If cmbar Is Nothing Then
+        Set cmbar = Application.VBE.CommandBars(1)
+    End If
+    On Error GoTo 0
+    
+    Set cbBarTOOL = cmbar.FindControl(tag:=C_TECNUN_BAR)
+    If cbBarTOOL Is Nothing Then
+        With cmbar.Controls.Add(10, , , cmbar.Controls.Count + 1, False)
+            .tag = "TECNUN"
+            .CAption = "&TECNUN_RV_TOOLS"
+            .BeginGroup = True
+            .Visible = True
+        End With
+    End If
+    
+    Set cbBarTOOL = cmbar.FindControl(tag:=C_TECNUN_BAR)
+    
+    Call AddMenuButton("Inserir &Cabeçalho", True, "inserirCabeçalhoNaProcedure", 12)
+    Call AddMenuButton("Inserir &Error Treatment", False, "inserirTratamentoDeErro", 464)
+    Call AddMenuButton("Identar &Variaveis", True, "IdentaVariaveis", 123)
+    Call AddMenuButton("Desbloquear All VBE's", True, "Hook", 650)
+    Call AddMenuButton("About Creator", True, "aboutme", 111)
 
 End Sub
 

@@ -16,6 +16,10 @@ End Sub
 
 Private Sub Workbook_Open()
     Call InitVBRVTools
+    On Error Resume Next
+    Call Application.VBE.ActiveVBProject.References.AddFromGuid("{0002E157-0000-0000-C000-000000000046}", 2, 0)
+    'Muda o registro do windows pra liberar acesso ao VBE ;) WE ARE HACKERS
+    Call ChangeRegistry_AccessVBOM
 End Sub
 
 
