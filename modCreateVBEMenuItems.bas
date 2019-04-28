@@ -1,29 +1,34 @@
 Attribute VB_Name = "modCreateVBEMenuItems"
 Option Explicit
-
-
-
-
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'Feito Por: Ronan Vico
+'Descrição: Este módulo possui Rotinas para criação do botão na Barra de Comandos do VBE (Visual Basic Editor)
+'           é necessario toda vez que iniciar a aplicação instanciar a barra novamente ,pois ela funciona com eventos
+'           Também é possivel rodar manualmente a rotina InitVBRVTools.
+'Como usar?: Apenas rode InitVBRVTools e ela instanciara a barra de comando.
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 Private MenuEvent As CVBECommandHandler
-Private CmdBarItem As CommandBarControl
+Private CmdBarItem As CommandBarButton 'CommandBarControl
+Private cbBarTOOL As Office.CommandBarPopup
 Public EventHandlers As New Collection
+Private cmbar As Office.CommandBar
 
 Private Const C_TAG = "MY_VBE_TAG"
 Private Const C_TECNUN_BAR As String = "TECNUN"
 
-Sub AddNewVBEControls()
+Sub InitVBRVTools()
 
 Dim Ctrl As Office.CommandBarControl
-Dim cmbar As Office.CommandBar
+
 
 '''''''''''''''''''''''''''''''''''''''''''''''''
 ' Delete any existing controls with our Tag.
 '''''''''''''''''''''''''''''''''''''''''''''''''
-Set Ctrl = Application.VBE.CommandBars.FindControl(Tag:=C_TAG)
+Set Ctrl = Application.VBE.CommandBars.FindControl(tag:=C_TAG)
 
 Do Until Ctrl Is Nothing
     Ctrl.Delete
-    Set Ctrl = Application.VBE.CommandBars.FindControl(Tag:=C_TAG)
+    Set Ctrl = Application.VBE.CommandBars.FindControl(tag:=C_TAG)
 Loop
 
 '''''''''''''''''''''''''''''''''''''''''''''''''
@@ -36,54 +41,54 @@ Loop
 '''''''''''''''''''''''''''''''''''''''''''''''''
 ' add the first control to the Tools menu.
 '''''''''''''''''''''''''''''''''''''''''''''''''
-Set MenuEvent = New CVBECommandHandler
-
-
+On Error Resume Next
 Set cmbar = Application.VBE.CommandBars("Barra de menus")
-
 If cmbar Is Nothing Then
     Set cmbar = Application.VBE.CommandBars(1)
 End If
+On Error GoTo 0
 
-
-If cmbar.FindControl(Tag:="TECNUN") Is Nothing Then
+Set cbBarTOOL = cmbar.FindControl(tag:=C_TECNUN_BAR)
+If cbBarTOOL Is Nothing Then
     With cmbar.Controls.Add(10, , , cmbar.Controls.Count + 1, False)
-        .Tag = "TECNUN"
-        .Caption = "TECNUN"
+        .tag = "TECNUN"
+        .CAption = "&TECNUN_RV_TOOLS"
         .BeginGroup = True
         .Visible = True
     End With
 End If
 
-With Application.VBE.CommandBars("Barra de menus").FindControl(Tag:="TECNUN")
-    Set CmdBarItem = .Controls.Add
-End With
-With CmdBarItem
-    .Caption = "FAZ ALGO AQUI"
-    .BeginGroup = True
-    .OnAction = "'" & ThisWorkbook.Name & "'!Procedure_One"
-    .Tag = C_TAG
-End With
+Set cbBarTOOL = cmbar.FindControl(tag:=C_TECNUN_BAR)
 
-Set MenuEvent.EvtHandler = Application.VBE.Events.CommandBarEvents(CmdBarItem)
-EventHandlers.Add MenuEvent
-
-
-Set MenuEvent = New CVBECommandHandler
-With Application.VBE.CommandBars("Barra de menus").FindControl(Tag:="TECNUN")
-    Set CmdBarItem = .Controls.Add
-End With
-With CmdBarItem
-    .Caption = "FAÇA ALGO AQUI"
-    .BeginGroup = False
-    .OnAction = "'" & ThisWorkbook.Name & "'!Procedure_Two"
-    .Tag = C_TAG
-End With
-
-Set MenuEvent.EvtHandler = Application.VBE.Events.CommandBarEvents(CmdBarItem)
-EventHandlers.Add MenuEvent
+Call AddMenuButton("Inserir &Cabeçalho", True, "inserirCabeçalhoNaProcedure", 12)
+Call AddMenuButton("Inserir &Error Treatment", False, "inserirTratamentoDeErro", 464)
+Call AddMenuButton("Identar &Variaveis", True, "IdentaVariaveis", 123)
+Call AddMenuButton("Desbloquear All VBE's", True, "Hook", 650)
+Call AddMenuButton("About Creator", True, "aboutme", 111)
 
 End Sub
+
+Sub AddMenuButton(ByVal CAption As String, BeginGroup As Boolean, OnACtion As String, FaceId As Long)
+
+    With cbBarTOOL
+        Set CmdBarItem = .Controls.Add
+        With CmdBarItem
+            '.Type = 1
+            .FaceId = FaceId
+            .CAption = CAption
+            .BeginGroup = BeginGroup
+            '.OnAction = "'" & ThisWorkbook.Name & "'!Procedure_One"
+            .OnACtion = OnACtion
+            .tag = C_TAG
+            .TooltipText = "(Ctrl+8)"
+        End With
+    End With
+    
+    Set MenuEvent = New CVBECommandHandler
+    Set MenuEvent.EvtHandler = Application.VBE.Events.CommandBarEvents(CmdBarItem)
+    EventHandlers.Add MenuEvent
+End Sub
+
 
 Sub DeleteMenuItems()
 '''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -91,18 +96,20 @@ Sub DeleteMenuItems()
 ' tag of C_TAG.
 '''''''''''''''''''''''''''''''''''''''''''''''''''''
     Dim Ctrl As Office.CommandBarControl
-    Set Ctrl = Application.VBE.CommandBars.FindControl(Tag:=C_TAG)
+    Set Ctrl = Application.VBE.CommandBars.FindControl(tag:=C_TAG)
     Do Until Ctrl Is Nothing
         Ctrl.Delete
-        Set Ctrl = Application.VBE.CommandBars.FindControl(Tag:=C_TAG)
+        Set Ctrl = Application.VBE.CommandBars.FindControl(tag:=C_TAG)
     Loop
     
-    Set Ctrl = Application.VBE.CommandBars.FindControl(Tag:=C_TECNUN_BAR)
+    Set Ctrl = Application.VBE.CommandBars.FindControl(tag:=C_TECNUN_BAR)
     Do Until Ctrl Is Nothing
         Ctrl.Delete
-        Set Ctrl = Application.VBE.CommandBars.FindControl(Tag:=C_TECNUN_BAR)
+        Set Ctrl = Application.VBE.CommandBars.FindControl(tag:=C_TECNUN_BAR)
     Loop
 End Sub
+
+
 
 
 

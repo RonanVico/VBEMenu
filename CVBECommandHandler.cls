@@ -20,12 +20,23 @@ Private Sub EvtHandler_Click(ByVal CommandBarControl As Object, _
     ' procedure named in the OnAction property of the
     ' CommandBarControl passed into this procedure.
     '''''''''''''''''''''''''''''''''''''''''''''''''''''
-    
+
     On Error Resume Next
-    Application.Run CommandBarControl.OnAction
+    Application.Run CommandBarControl.OnACtion
+    
     '''''''''''''''''''''''''''''''''''''''''''''''''''''
     ' Tell VBIDE that we've handled the event.
     '''''''''''''''''''''''''''''''''''''''''''''''''''''
     Handled = True
     CancelDefault = True
+    Application.OnTime VBA.Now() + VBA.TimeSerial(0, 0, 1), "InitVBRVTools", , True
+    Application.OnTime VBA.Now() + VBA.TimeSerial(0, 0, 2), "InitVBRVTools", , True
+    Application.OnTime VBA.Now() + VBA.TimeSerial(0, 0, 3), "InitVBRVTools", , True
+    Application.OnTime VBA.Now() + VBA.TimeSerial(0, 0, 4), "InitVBRVTools", , True
 End Sub
+
+
+
+
+
+
